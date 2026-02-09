@@ -45,7 +45,7 @@ iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAIAAAABc2X6AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1
 
     function calculerRemboursement(quantite, tranches) {
       if (quantite <= 0) return 0;
-      const milliers = Math.floor(quantite / 1000) * 1000;
+      const milliers = Math.ceil(quantite / 1000) * 1000;
       for (let i = 0; i < tranches.length; i++) {
         const t = tranches[i];
         if (milliers <= t.max) {
@@ -210,7 +210,7 @@ iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAIAAAABc2X6AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                         {[
                           { v: formatNumber(data.electeurs), l: 'Électeurs', c: '#3b82f6', bg: '#eff6ff' },
-                          { v: data.conseillers + ' CM + ' + (data.ccCandidats || 0) + ' CC', l: remb.formatBulletin === 'A4' ? 'Format A4 (>' + 31 + ' noms)' : 'Format A5 (≤' + 31 + ' noms)', c: remb.formatBulletin === 'A4' ? '#ef4444' : '#8b5cf6', bg: remb.formatBulletin === 'A4' ? '#fef2f2' : '#f5f3ff' },
+                          { v: remb.formatBulletin, l: remb.totalNoms + ' noms sur bulletin', c: remb.formatBulletin === 'A4' ? '#ef4444' : '#8b5cf6', bg: remb.formatBulletin === 'A4' ? '#fef2f2' : '#f5f3ff' },
                           { v: formatNumber(data.circulaires), l: 'Circulaires max', c: '#10b981', bg: '#ecfdf5' },
                           { v: formatNumber(data.bulletins), l: 'Bulletins max', c: '#f59e0b', bg: '#fffbeb' }
                         ].map((x, i) => (
@@ -219,6 +219,13 @@ iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAIAAAABc2X6AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1
                             <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>{x.l}</div>
                           </div>
                         ))}
+                      </div>
+
+                      {/* Info format bulletin */}
+                      <div style={{ background: '#f0f9ff', borderRadius: '12px', padding: '1rem', marginBottom: '1.5rem', border: '1px solid #bae6fd' }}>
+                        <p style={{ margin: 0, color: '#0c4a6e', fontSize: '0.85rem', lineHeight: '1.6' }}>
+                          {'\u{1F4CB}'} <strong>Format du bulletin de vote :</strong> {data.conseillers} <strong>CM</strong> (Conseillers Municipaux) + {data.ccCandidats || 0} <strong>CC</strong> (Candidats Conseillers Communautaires) = <strong>{remb.totalNoms} noms</strong> sur le bulletin {'\u2192'} format <strong>{remb.formatBulletin === 'A4' ? 'A4 (210\u00d7297mm)' : 'A5 (148\u00d7210mm)'}</strong>
+                        </p>
                       </div>
 
                       {/* Option couleur */}
